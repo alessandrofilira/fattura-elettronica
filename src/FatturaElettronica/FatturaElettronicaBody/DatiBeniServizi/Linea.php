@@ -36,6 +36,8 @@ class Linea implements XmlSerializableInterface
     protected $codiceTipo;
     /** @var ScontoMaggiorazione */
     protected $scontoMaggiorazione;
+    /** @var string */
+    protected $tipoCessionePrestazione;
 
 
     /**
@@ -76,6 +78,9 @@ class Linea implements XmlSerializableInterface
     {
         $writer->startElement('DettaglioLinee');
         $writer->writeElement('NumeroLinea', $this->numeroLinea);
+        if($this->tipoCessionePrestazione){
+            $writer->writeElement('TipoCessionePrestazione', $this->tipoCessionePrestazione);
+        }
         if ($this->codiceArticolo) {
             $writer->startElement('CodiceArticolo');
             $writer->writeElement('CodiceTipo', $this->codiceTipo);
@@ -125,6 +130,16 @@ class Linea implements XmlSerializableInterface
     {
         $this->numeroLinea = $n;
     }
+
+    /**
+     * @param string $tipoCessionePrestazione
+     */
+    public function setTipoCessionePrestazione($tipoCessionePrestazione)
+    {
+        $this->tipoCessionePrestazione = $tipoCessionePrestazione;
+    }
+
+
 
     public function setScontoMaggiorazione(ScontoMaggiorazione $scontoMaggiorazione)
     {
