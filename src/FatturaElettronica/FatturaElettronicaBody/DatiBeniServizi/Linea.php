@@ -17,6 +17,7 @@ use Deved\FatturaElettronica\XmlSerializableInterface;
 class Linea implements XmlSerializableInterface
 {
     use MagicFieldsTrait;
+
     /** @var integer */
     protected $numeroLinea;
     /** @var string */
@@ -33,6 +34,8 @@ class Linea implements XmlSerializableInterface
     protected $aliquotaIva;
     /** @var string */
     protected $codiceTipo;
+    /** @var ScontoMaggiorazione */
+    protected $scontoMaggiorazione;
 
 
     /**
@@ -53,7 +56,8 @@ class Linea implements XmlSerializableInterface
         $unitaMisura = 'pz',
         $aliquotaIva = 22.00,
         $codiceTipo = 'FORN'
-    ) {
+    )
+    {
         $this->codiceArticolo = $codiceArticolo;
         $this->descrizione = $descrizione;
         $this->prezzoUnitario = $prezzoUnitario;
@@ -74,8 +78,8 @@ class Linea implements XmlSerializableInterface
         $writer->writeElement('NumeroLinea', $this->numeroLinea);
         if ($this->codiceArticolo) {
             $writer->startElement('CodiceArticolo');
-                $writer->writeElement('CodiceTipo', $this->codiceTipo);
-                $writer->writeElement('CodiceValore', $this->codiceArticolo);
+            $writer->writeElement('CodiceTipo', $this->codiceTipo);
+            $writer->writeElement('CodiceValore', $this->codiceArticolo);
             $writer->endElement();
         }
         $writer->writeElement('Descrizione', $this->descrizione);
@@ -86,6 +90,9 @@ class Linea implements XmlSerializableInterface
         $this->writeXmlField('DataInizioPeriodo', $writer);
         $this->writeXmlField('DataFinePeriodo', $writer);
         $writer->writeElement('PrezzoUnitario', fe_number_format($this->prezzoUnitario, 2));
+        if ($this->scontoMaggiorazione) {
+            $this->scontoMaggiorazione->toXmlBlock($writer);
+        }
         $writer->writeElement('PrezzoTotale', $this->prezzoTotale());
         $writer->writeElement('AliquotaIVA', fe_number_format($this->aliquotaIva, 2));
         $this->writeXmlField('Natura', $writer);
@@ -117,6 +124,11 @@ class Linea implements XmlSerializableInterface
     public function setNumeroLinea($n)
     {
         $this->numeroLinea = $n;
+    }
+
+    public function setScontoMaggiorazione(ScontoMaggiorazione $scontoMaggiorazione)
+    {
+        $this->scontoMaggiorazione = $scontoMaggiorazione;
     }
 
     /**
