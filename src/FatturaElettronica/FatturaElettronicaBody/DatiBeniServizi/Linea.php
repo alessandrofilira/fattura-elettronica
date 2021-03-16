@@ -94,7 +94,7 @@ class Linea implements XmlSerializableInterface
         }
         $this->writeXmlField('DataInizioPeriodo', $writer);
         $this->writeXmlField('DataFinePeriodo', $writer);
-        $writer->writeElement('PrezzoUnitario', fe_number_format($this->prezzoUnitario, 2));
+        $writer->writeElement('PrezzoUnitario', fe_number_format($this->prezzoUnitario, 8));
         if ($this->scontoMaggiorazione) {
             $this->scontoMaggiorazione->toXmlBlock($writer);
         }
@@ -116,7 +116,7 @@ class Linea implements XmlSerializableInterface
     {
         $quantita = $this->quantita ? $this->quantita : 1;
         if ($format) {
-            return fe_number_format($this->prezzoUnitario * $quantita, 2);
+            return fe_number_format($this->prezzoUnitario * $quantita, 8);
         }
         return $this->prezzoUnitario * $quantita;
     }
